@@ -38,6 +38,15 @@ class ReactAgent:
         for i in range(1, 5):  # NOTE: Add max retries to settings.
             print(prompt)
 
+            # NOTE: Currently making two separate LLM calls, one to generate a Thought, and another to generate an Action.
+            # I think it can be optimized by modifying the prompt to ask the LLM to return both the Thought and Action together in a single call.
+            # For example:
+            # {
+            #   "thought": "I need to retrieve weather data to answer the question.",
+            #   "action": { "tool": "weather_api", "input": "New York" }
+            # }
+            # This eliminates the need for a second call and avoids potential mismatch or drift between Thought and Action steps.
+
             thought = (
                 self._ask_llm(prompt + f"\nThought {i}:", stop_sequences=["\n"]).strip().removeprefix(f"Thought {i}")
             )
